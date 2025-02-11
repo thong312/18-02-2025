@@ -29,7 +29,7 @@ export default function Header() {
           </div>
   
           {/* Nút đăng nhập */}
-          <a href="/login" className="bg-blue-600 text-white px-4 py-2 rounded-md">
+          <a href="/login" className="bg-orange-600 text-white px-4 py-2 rounded-md">
             ĐĂNG NHẬP
           </a>
         </div>

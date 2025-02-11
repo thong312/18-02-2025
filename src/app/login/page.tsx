@@ -14,7 +14,7 @@ export default function Login() {
     };
     
     return (
-        <div className="flex items-center justify-center min-h-screen bg-cover bg-center bg-[url('/mnt/data/image.png')]">
+        <div className="flex items-center justify-center min-h-screen bg-cover bg-center ">
             <div className="bg-white/20 backdrop-blur-md p-8 rounded-lg shadow-lg w-full max-w-md">
                 <h2 className="text-center text-white text-2xl font-semibold mb-4">ĐĂNG NHẬP</h2>
 

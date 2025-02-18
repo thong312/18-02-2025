@@ -28,15 +28,15 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-cover bg-center`}
-        style={{ backgroundImage: "url('https://i.pinimg.com/originals/aa/c4/79/aac47997d1f700b9dbd0af658368120e.jpg')" }}
+        // style={{ backgroundImage: "url('https://i.pinimg.com/originals/aa/c4/79/aac47997d1f700b9dbd0af658368120e.jpg')" }}
       >
-        <div className="navbar">
+        {/* <div className="navbar">
           <Header />
-        </div>
-        <div className="mt-16"> 
+        </div> */}
+        <div> 
           {children}
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

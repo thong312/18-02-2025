@@ -10,10 +10,10 @@ export default function HomePage() {
   const sortedList = [...numList].sort((a, b) => a - b);
   const filteredList = numList.filter(num => num !== 3);
 
-  const decimalSum = 0;
-  const API_URL = 'http://localhost:3000'; 
-  const teamMembers = ['Thông', 'Hải', 'Phần', 'Linh', 'Lâm']; 
-  const isProgrammer = true; 
+  // const decimalSum = 0;
+  // const API_URL = 'http://localhost:3000'; 
+  // const teamMembers = ['Thông', 'Hải', 'Phần', 'Linh', 'Lâm']; 
+  // const isProgrammer = true; 
 
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export default function HomePage() {
       <p><strong>Lớn hơn 5:</strong> {JSON.stringify(greaterThanFive)}</p>
       <p><strong>Số thứ tự của số 7:</strong> {indexOfSeven}</p>
       <p><strong>Sắp xếp mảng theo thứ tự nhỏ đến lớn:</strong> {JSON.stringify(sortedList)}</p>
-      <p><strong>Xóa 3 ra khỏi mảngmảng</strong> {JSON.stringify(filteredList)}</p>
+      <p><strong>Xóa 3 ra khỏi mảng</strong> {JSON.stringify(filteredList)}</p>
       <button
           type="button"
           className="px-6 py-3 bg-orange-300 text-white font-semibold rounded-md hover:bg-orange-600 transition"

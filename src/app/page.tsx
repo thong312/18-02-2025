@@ -2,8 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react';
-import Header from '../components/Header'; // Import the Header component
-import LoginBtn from './loginBtn'; // Import the LoginBtn component
+// import Header from '../components/Header'; // Import the Header component
+// import LoginBtn from './loginBtn'; // Import the LoginBtn component
 
 export default function Page() {
   const router = useRouter();

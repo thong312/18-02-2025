@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface Pokemon {
   name: string;
@@ -42,7 +43,13 @@ export default function Page() {
         {currentItems.map(pokemon => (
           <li key={pokemon.name} className="bg-white shadow-md rounded-lg p-4 flex flex-col items-center hover:scale-105 transition">
             <a href={pokemon.url} className="flex flex-col items-center">
-              <img src={pokemon.image} alt={pokemon.name} className="w-24 h-24 object-contain mb-3" />
+              <Image 
+                src={pokemon.image || '/path/to/fallback-image.png'} 
+                alt={pokemon.name} 
+                width={96} 
+                height={96} 
+                className="w-24 h-24 object-contain mb-3" 
+              />
               <span className="text-lg font-semibold capitalize text-gray-700">{pokemon.name}</span>
             </a>
           </li>

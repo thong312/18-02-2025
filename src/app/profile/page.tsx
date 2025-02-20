@@ -2,6 +2,7 @@
 import React from 'react'
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from 'next/image';
 
 export default function Profile() {
   const [username, setUsername] = useState("");
@@ -39,9 +40,11 @@ export default function Profile() {
   return (
     <div className="flex items-center justify-center min-h-screen p-8 pb-20 sm:p-20 bg-gray-100">
       <div className="flex flex-col gap-6 bg-white p-10 rounded-lg shadow-xl max-w-md w-full">
-        <img
+        <Image
           src="https://th.bing.com/th/id/R.8e2c571ff125b3531705198a15d3103c?rik=gzhbzBpXBa%2bxMA&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fuser-png-icon-big-image-png-2240.png&ehk=VeWsrun%2fvDy5QDv2Z6Xm8XnIMXyeaz2fhR3AgxlvxAc%3d&risl=&pid=ImgRaw&r=0"
           alt="User Logo"
+          width={96}
+          height={96}
           className="w-24 h-24 mx-auto mb-4 rounded-full border-2 border-gray-300"
         />
         <p className="text-center text-2xl font-bold mb-2">Profile Page</p>
@@ -75,7 +78,7 @@ export default function Profile() {
           className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition"
           onClick={() => router.push('/')}
         >
-          back to homehome
+          back to home
         </button>
       </div>
     </div>

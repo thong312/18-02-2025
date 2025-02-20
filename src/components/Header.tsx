@@ -1,9 +1,11 @@
+import Link from 'next/link';
+
 export default function Header() {
     return (
       <header className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-cover bg-center transition-colors duration-300 hover:bg-white">
         {/* Logo và Menu */}
         <div className="flex items-center space-x-8">
-          <a href="/" className="text-2xl font-bold text-gray-800" >Logo</a>
+          <Link href="/" className="text-2xl font-bold text-gray-800">Logo</Link>
           <nav>
             <ul className="flex space-x-6 text-gray-900">
               <li key="san-pham"><a href="#san-pham" className="hover:text-gray-900">SẢN PHẨM</a></li>
@@ -35,4 +37,4 @@ export default function Header() {
         </div>
       </header>
     );
-  }
+}

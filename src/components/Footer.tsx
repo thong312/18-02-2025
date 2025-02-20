@@ -1,4 +1,5 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -6,7 +7,7 @@ export default function Footer() {
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5">
         {/* Logo + Social Media */}
         <div className="flex flex-col items-start">
-          <img src="/logo.png" alt="Logo" className="w-40 mb-6" />
+          <Image src="/logo.png" alt="Logo" width={160} height={40} className="mb-6" />
           <div className="flex space-x-4 mb-6">
             <a href="#" className="bg-gray-300 p-3 rounded-full"><i className="fab fa-telegram"></i></a>
             <a href="#" className="bg-gray-300 p-3 rounded-full"><i className="fab fa-facebook"></i></a>

@@ -36,7 +36,7 @@ export default function AccountInfo() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="relative w-20 h-20">
-              <Image
+            <Image
                 src={Avatar}
                 alt="Avatar"
                 className="rounded-full object-cover w-full h-full"
@@ -103,6 +103,7 @@ export default function AccountInfo() {
               // Form nhập mật khẩu đè lên nút đổi mật khẩu
               <div className="absolute inset-0 bg-white flex items-center space-x-4 pt-5">
                 <div className="flex flex-col justify-start space-y-2 w-1/3">
+                <label></label>
                   <input
                     type="password"
                     placeholder="Mật khẩu mới"
@@ -113,6 +114,7 @@ export default function AccountInfo() {
                 </div>
 
                 <div className="flex flex-col justify-start space-y-2 w-1/3">
+                  <label>Nhập lại</label>
                   <input
                     type="password"
                     placeholder="Nhập lại mật khẩu"
@@ -122,7 +124,7 @@ export default function AccountInfo() {
                   />
                 </div>
 
-                <div className="flex space-x-2 justify-end w-full">
+                <div className="flex space-x-2 ml-auto">
                   <button
                     onClick={handleCancel}
                     className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"

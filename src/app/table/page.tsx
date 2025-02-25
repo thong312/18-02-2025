@@ -35,11 +35,13 @@ export default function AccountInfo() {
       <div className="p-6" style={{ height: "300px" }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="relative w-20 h-20">
+            <div className="relative w-70 h-70">
             <Image
                 src={Avatar}
                 alt="Avatar"
-                className="rounded-full object-cover w-full h-full"
+                width={70}
+                height={70}
+                className="rounded-full object-cover"
               />
               <div className="absolute inset-0 bg-black opacity-75 rounded-full"></div>
               <div className="absolute inset-0 flex items-end justify-center rounded-full cursor-pointer">
@@ -103,7 +105,6 @@ export default function AccountInfo() {
               // Form nhập mật khẩu đè lên nút đổi mật khẩu
               <div className="absolute inset-0 bg-white flex items-center space-x-4 pt-5">
                 <div className="flex flex-col justify-start space-y-2 w-1/3">
-                <label></label>
                   <input
                     type="password"
                     placeholder="Mật khẩu mới"

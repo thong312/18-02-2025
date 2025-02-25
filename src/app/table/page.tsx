@@ -103,29 +103,29 @@ export default function AccountInfo() {
               </button>
             ) : (
               // Form nhập mật khẩu đè lên nút đổi mật khẩu
-              <div className="absolute inset-0 bg-white flex items-center space-x-4 py-1">
-                <div className="flex flex-col justify-start space-y-2 w-1/3 pt-8">
+              <div className="absolute inset-0 bg-white flex items-center py-1">
+                <div className="flex flex-col justify-start space-y-1 w-1/4 pt-8">
                   <input
                     type="password"
-                    placeholder="Mật khẩu mới"
+                    placeholder="Nhập mật khẩu mới..."
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="border rounded-lg px-3 py-2 w-full"
+                    className="border-none rounded-none px-0.5 py-2 w-3/4  "
                   />
                 </div>
 
-                <div className="flex flex-col justify-start space-y-2 w-1/3">
+                <div className="flex flex-col justify-start space-y-2 w-1/4 ">
                   <label>Nhập lại</label>
                   <input
                     type="password"
-                    placeholder="Nhập lại mật khẩu"
+                    placeholder="Nhập lại mật khẩu...."
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="border rounded-lg px-3 py-2 w-full"
+                    className="border-none rounded-lg px-0.5 py-2 w-3/4 "
                   />
                 </div>
 
-                <div className="flex space-x-2 ml-auto pt-7 pl-100">
+                <div className="flex space-x-2 justify-end w-full mt-7">
                   <button
                     onClick={handleCancel}
                     className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"

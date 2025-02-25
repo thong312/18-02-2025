@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Avatar from "../../assets/avatar.png";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { CSSTransition } from 'react-transition-group';
+import './styles.css'; // Import the CSS file for animations
 
 export default function AccountInfo() {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -36,7 +38,7 @@ export default function AccountInfo() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="relative w-70 h-70">
-            <Image
+              <Image
                 src={Avatar}
                 alt="Avatar"
                 width={70}
@@ -59,7 +61,7 @@ export default function AccountInfo() {
 
           {/* Logout Button */}
           <div>
-            <button className="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 shadow" style={{ color: "#323232" }}>
+            <button className="animated-button px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 shadow transition-transform transform hover:scale-105" style={{ color: "#323232" }}>
               <LogoutIcon style={{ color: '#007DC0', padding: '2px', marginRight: '4px' }} />
               Đăng xuất
             </button>
@@ -96,56 +98,61 @@ export default function AccountInfo() {
             {/* Nút Đổi mật khẩu */}
             {!isEditingPassword ? (
               <button
-                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 relative z-10"
+                className="animated-button px-4 py-2 bg-gray-100 rounded-lg border-slate-200 relative z-10 transition-transform transform hover:scale-105"
+                style={{ color:"#55595D"}}
                 onClick={() => setIsEditingPassword(true)}
               >
                 Đổi mật khẩu
               </button>
             ) : (
               // Form nhập mật khẩu đè lên nút đổi mật khẩu
-              <div className="absolute inset-0 bg-white flex items-center py-1">
-                <div className="flex flex-col justify-start space-y-1 w-1/4 pt-8">
-                  <input
-                    type="password"
-                    placeholder="Nhập mật khẩu mới..."
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border-none rounded-none px-0.5 py-2 w-3/4  "
-                  />
-                </div>
+              <CSSTransition
+                in={isEditingPassword}
+                timeout={300}
+                classNames="slide"
+                unmountOnExit
+              >
+                <div className="absolute inset-0 bg-white flex items-center py-1 slide-enter-active">
+                  <div className="flex flex-col justify-start space-y-1 w-1/4 pt-8">
+                    <input
+                      type="password"
+                      placeholder="Nhập mật khẩu mới..."
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="border-none rounded-none px-0.5 py-2 w-3/4  "
+                    />
+                  </div>
 
-                <div className="flex flex-col justify-start space-y-2 w-1/4 ">
-                  <label>Nhập lại</label>
-                  <input
-                    type="password"
-                    placeholder="Nhập lại mật khẩu...."
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="border-none rounded-lg px-0.5 py-2 w-3/4 "
-                  />
-                </div>
+                  <div className="flex flex-col justify-start space-y-2 w-1/4 ">
+                    <label>Nhập lại</label>
+                    <input
+                      type="password"
+                      placeholder="Nhập lại mật khẩu...."
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="border-none rounded-lg px-0.5 py-2 w-3/4 "
+                    />
+                  </div>
 
-                <div className="flex space-x-2 justify-end w-full mt-7">
-                  <button
-                    onClick={handleCancel}
-                    className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
-                  >
-                    Hủy
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                  >
-                    Lưu
-                  </button>
+                  <div className="flex space-x-1 justify-end w-full mt-7">
+                    <button
+                      onClick={handleCancel}
+                      className="animated-button px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-transform transform hover:scale-105 slide-left"
+                    >
+                      Hủy thay đổi 
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      className="animated-button px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105 slide-right"
+                    >
+                      Lưu mật khẩu
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </CSSTransition>
             )}
           </div>
         </div>
-
-
-
       </div>
     </div>
   );

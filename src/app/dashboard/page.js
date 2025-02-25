@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import "./switch.css";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search } from "lucide-react";
 
 export default function CameraSystem() {
-  const [cameras, setCameras] = useState([
+  const [cameras] = useState([
     { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Kích hoạt thất bại" },
     { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Kích hoạt thất bại" },
     { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
@@ -14,6 +16,7 @@ export default function CameraSystem() {
     { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã bị khóa" },
     { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang hoạt động" },
   ]);
+  const [isGridLayout, setIsGridLayout] = useState(false);
 
   const statusColors = {
     "Đang hoạt động": "text-green-500",
@@ -32,28 +35,74 @@ export default function CameraSystem() {
         <h2 className="text-xl font-semibold mb-4">Tích hợp thiết bị</h2>
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-4 mb-4">
-            <button className="px-4 py-2 rounded-lg bg-blue-100 text-blue-600" style={{fontSize:"16"}}>Camera</button>
-            <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600" style={{fontSize:"16"}}>Computing AI</button>
-            <button className="px-4 py-2 rounded-lg bg-blue-100 text-blue-600" style={{fontSize:"16"}}>Thiết bị khác</button>
+
+            <div className="flex justify-center items-center space-x-2">
+              <button className="px-4 py-2 rounded-lg bg-blue-100 text-blue-600 flex items-center space-x-2" style={{ fontSize: "16px" }}>
+                <Cctv size={20} />
+                <span>Camera</span>
+              </button>
+            </div>
+
+            <div className="flex justify-center items-center space-x-2">
+              <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600 flex items-center space-x-2" style={{ fontSize: "16px" }}>
+                <Cpu size={20} />
+                <span>Computing AI</span>
+              </button>
+            </div>
+            <div className="flex justify-center items-center space-x-2">
+              <button className="px-4 py-2 rounded-lg bg-blue-100 text-blue-600 flex items-center space-x-2" style={{ fontSize: "16" }}>
+                <Ghost size={20} />
+                <span> Thiết bị khác </span>
+              </button>
+            </div>
+
           </div>
           <div className="flex items-center space-x-2">
-          <input
-            type="text"
-            placeholder="Tìm kiếm dữ liệu..."
-            className="border p-2 rounded-lg w-1/3"
-          />
-          <div className="flex items-center space-x-2">
-            <select className="border p-2 rounded-lg">
-              <option>Hiển thị: Tất cả</option>
-            </select>
-            <button className="px-4 py-2 rounded-lg bg-black text-white">Tạo mới</button>
-          </div>
+            <div className="relative w-1/3">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Tìm kiếm dữ liệu..."
+                className="border p-2 pl-10 rounded-lg w-full"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                <button
+                  onClick={() => setIsGridLayout(true)}
+                  className={`p-2 rounded-lg ${isGridLayout ? "bg-white shadow" : "text-gray-400"}`}
+                >
+                  <LayoutGrid size={20} />
+                </button>
+                <button
+                  onClick={() => setIsGridLayout(false)}
+                  className={`p-2 rounded-lg ${!isGridLayout ? "bg-white shadow" : "text-gray-400"}`}
+                >
+                  <List size={20} />
+                </button>
+              </div>
+              <select className="border p-2 rounded-lg">
+                <option value="" disabled hidden>Hiển thị</option>
+                <option>Tất cả</option>
+                <option>Đang kích hoạt</option>
+                <option>Kích hoạt thất bại</option>
+                <option>Lỗi xác thực</option>
+              </select>
+
+              <FilterListIcon />
+              <div className="flex justify-center items-center space-x-2">
+                <button className="px-4 py-2 rounded-lg bg-black text-white flex items-center space-x-2">
+                  <CirclePlus size={20} />
+                  <span>Tạo mới</span>
+                </button>
+              </div>
+            </div>
 
           </div>
         </div>
 
         <div className="overflow-x-auto rounded-lg">
-          <table className="min-w-full text-sm text-left">
+          <table className={`min-w-full text-sm text-left ${isGridLayout ? 'grid-layout' : ''}`}>
             <thead className="bg-gray-100">
               <tr>
                 <th className="py-2 px-4">#</th>

@@ -5,7 +5,9 @@ import Avatar from "../../assets/avatar.png";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { CSSTransition } from 'react-transition-group';
 import './styles.css'; // Import the CSS file for animations
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 export default function AccountInfo() {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [password, setPassword] = useState("");
@@ -19,15 +21,16 @@ export default function AccountInfo() {
 
   const handleSave = () => {
     if (password === confirmPassword) {
-      alert("Mật khẩu đã được lưu!");
+      toast.success("Mật khẩu đã được lưu!");
       handleCancel();
     } else {
-      alert("Mật khẩu không khớp. Vui lòng thử lại.");
+      toast.error("Mật khẩu không khớp. Vui lòng thử lại.");
     }
   };
 
   return (
     <div className="max-w-10xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg relative">
+      <ToastContainer />
       {/* Header */}
       <div className="bg-gray-600 text-white rounded-t-2xl p-4">
         <h1 className="text-xl font-semibold">Thông tin tài khoản</h1>
@@ -137,13 +140,14 @@ export default function AccountInfo() {
                   <div className="flex space-x-1 justify-end w-full mt-7">
                     <button
                       onClick={handleCancel}
-                      className="animated-button px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-transform transform hover:scale-105 slide-left"
+                      className="animated-button px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-transform transform hover:scale-105 slide-left slide-left-back "
                     >
+                      <HighlightOffIcon style={{color:"gray",padding:'4px'}}/>
                       Hủy thay đổi 
                     </button>
                     <button
                       onClick={handleSave}
-                      className="animated-button px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105 slide-right"
+                      className="animated-button px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105 slide-right slide-right-back"
                     >
                       Lưu mật khẩu
                     </button>

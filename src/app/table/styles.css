@@ -34,20 +34,47 @@
   animation: slideRight 0.3s forwards;
 }
 
+.slide-left-back {
+    animation: slideLeft 0.3s forwards;
+  }
+  
+  .slide-right-back {
+    animation: slideRight 0.3s forwards;
+  }
+
 @keyframes slideLeft {
   from {
     transform: translateX(0);
   }
   to {
-    transform: translateX(-25%);
+    transform: translateX(-20%);
   }
 }
 
 @keyframes slideRight {
-  from {
-    transform: translateX(-25%);
-  }
-  to {
-    transform: translateX(0);
-  }
+    from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-10%);
+      }
 }
+
+/* back */
+@keyframes slideLeftBack {
+    from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-10%);
+      }
+  }
+  
+  @keyframes slideRightBack  {
+        from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-20%);
+    }
+  }

@@ -103,8 +103,8 @@ export default function AccountInfo() {
               </button>
             ) : (
               // Form nhập mật khẩu đè lên nút đổi mật khẩu
-              <div className="absolute inset-0 bg-white flex items-center space-x-4 pt-5">
-                <div className="flex flex-col justify-start space-y-2 w-1/3">
+              <div className="absolute inset-0 bg-white flex items-center space-x-4 py-1">
+                <div className="flex flex-col justify-start space-y-2 w-1/3 pt-8">
                   <input
                     type="password"
                     placeholder="Mật khẩu mới"
@@ -125,7 +125,7 @@ export default function AccountInfo() {
                   />
                 </div>
 
-                <div className="flex space-x-2 ml-auto">
+                <div className="flex space-x-2 ml-auto pt-7 pl-100">
                   <button
                     onClick={handleCancel}
                     className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"

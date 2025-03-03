@@ -83,43 +83,38 @@ export default function CameraSystem() {
     return null;
   };
   return (
-    <div className="container mx-auto p-6">
-      <div className="bg-white shadow rounded-2xl p-4">
-        <h2 className="text-xl font-semibold mb-4">Tích hợp thiết bị</h2>
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-4 mb-4">
-
-            <div className="flex justify-center items-center space-x-2">
-              <button
-                className={`px-4 py-2 rounded-lg ${selectedData === "camera" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2`}
-                style={{ fontSize: "16px" }}
-                onClick={() => setSelectedData("camera")}
-              >
-                <Cctv size={20} />
-                <span>Camera</span>
-              </button>
-            </div>
-
-            <div className="flex justify-center items-center space-x-2">
-              <button
-                className={`px-4 py-2 rounded-lg ${selectedData === "computingAI" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2`}
-                style={{ fontSize: "16px" }}
-                onClick={() => setSelectedData("computingAI")}
-              >
-                <Cpu size={20} />
-                <span>Computing AI</span>
-              </button>
-            </div>
-            <div className="flex justify-center items-center space-x-2">
-              <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600 flex items-center space-x-2" style={{ fontSize: "16" }}>
-                <Ghost size={20} />
-                <span> Thiết bị khác </span>
-              </button>
-            </div>
-
+    <div className="container mx-auto p-2 sm:p-4 md:p-6">
+      <div className="bg-white shadow rounded-2xl p-2 sm:p-4">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4">Tích hợp thiết bị</h2>
+        
+        {/* Device type buttons */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-4 sm:space-y-0">
+          <div className="flex flex-wrap items-center gap-2 mb-4 w-full sm:w-auto">
+            <button
+              className={`px-3 py-2 rounded-lg ${selectedData === "camera" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2 text-sm sm:text-base`}
+              onClick={() => setSelectedData("camera")}
+            >
+              <Cctv className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Camera</span>
+            </button>
+            
+            <button
+              className={`px-3 py-2 rounded-lg ${selectedData === "computingAI" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2 text-sm sm:text-base`}
+              onClick={() => setSelectedData("computingAI")}
+            >
+              <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Computing AI</span>
+            </button>
+            
+            <button className="px-3 py-2 rounded-lg bg-gray-100 text-gray-600 flex items-center space-x-2 text-sm sm:text-base">
+              <Ghost className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Thiết bị khác</span>
+            </button>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="relative w-1/3">
+
+          {/* Search and filters */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+            <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
@@ -127,22 +122,24 @@ export default function CameraSystem() {
                 className="border p-2 pl-10 rounded-lg w-full"
               />
             </div>
-            <div className="flex items-center space-x-2">
+            
+            <div className="flex flex-wrap items-center gap-2">
               <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => setIsGridLayout(true)}
                   className={`p-2 rounded-lg ${isGridLayout ? "bg-white shadow" : "text-gray-400"}`}
                 >
-                  <LayoutGrid size={20} />
+                  <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <button
                   onClick={() => setIsGridLayout(false)}
                   className={`p-2 rounded-lg ${!isGridLayout ? "bg-white shadow" : "text-gray-400"}`}
                 >
-                  <List size={20} />
+                  <List className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
-              <select className="border p-2 rounded-lg">
+
+              <select className="border p-2 rounded-lg text-sm">
                 <option value="" disabled hidden>Hiển thị</option>
                 <option>Tất cả</option>
                 <option>Đang kích hoạt</option>
@@ -150,23 +147,22 @@ export default function CameraSystem() {
                 <option>Lỗi xác thực</option>
               </select>
 
-              <FilterListIcon />
-              <div className="flex justify-center items-center space-x-2">
-                <button className="px-4 py-2 rounded-lg bg-black text-white flex items-center space-x-2">
-                  <CirclePlus size={20} />
-                  <span>Tạo mới</span>
-                </button>
-              </div>
+              <FilterListIcon className="w-6 h-6" />
+              
+              <button className="px-3 py-2 rounded-lg bg-black text-white flex items-center space-x-2 text-sm sm:text-base">
+                <CirclePlus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Tạo mới</span>
+              </button>
             </div>
-
           </div>
         </div>
 
+        {/* Grid/List View */}
         <div className="overflow-x-auto rounded-lg">
           {isGridLayout ? (
-            <div className="grid grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
               {currentData.map((item, index) => (
-                <div key={index} className="bg-white p-2 rounded-lg shadow relative w-56">
+                <div key={index} className="bg-white p-2 rounded-lg shadow relative w-full">
                   <div className="flex flex-col items-center py-4">
                     {renderIcon(selectedData)}
                     {renderStatus(item.status)}
@@ -197,53 +193,56 @@ export default function CameraSystem() {
                     </div>
                   </div>
                 </div>
-
               ))}
             </div>
           ) : (
-            <table className="min-w-full text-sm text-left">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="py-2 px-4 text-[#8E95A9]">#</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Mã ID</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Tên thiết bị</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ IP/domain</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Tọa độ vị trí</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Trạng thái</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Bật/Tắt</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData.map((item, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
-                    <td className="py-2 px-4 text-center">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td className="py-2 px-4 flex items-center gap-1">{item.id}
-                      <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
-                    </td>
-                    <td className="py-2 px-4 ">{item.name}
-                    </td>
-                    <td className="py-2 px-4 flex items-center gap-1">{item.ip}<CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-
-                    <td className="py-2 px-4">{item.location}</td>
-                    <td className="py-2 px-4 text-blue-500 cursor-pointer flex items-center gap-1">{item.timestamp} <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-                    <td className="py-2 px-4">{renderStatus(item.status)}</td>
-                    <td className="py-2 px-4 text-center">
-                      <label className="switch">
-                        <input type="checkbox" />
-                        <span className="slider"></span>
-                      </label>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm text-left">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="py-2 px-4 text-[#8E95A9]">#</th>
+                    <th className="py-2 px-4 text-[#8E95A9]">Mã ID</th>
+                    <th className="py-2 px-4 text-[#8E95A9]">Tên thiết bị</th>
+                    <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ IP/domain</th>
+                    <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ</th>
+                    <th className="py-2 px-4 text-[#8E95A9]">Tọa độ vị trí</th>
+                    <th className="py-2 px-4 text-[#8E95A9]">Trạng thái</th>
+                    <th className="py-2 px-4 text-[#8E95A9]">Bật/Tắt</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {currentData.map((item, index) => (
+                    <tr key={index} className="border-b hover:bg-gray-50">
+                      <td className="py-2 px-4 text-center">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                      <td className="py-2 px-4 flex items-center gap-1">{item.id}
+                        <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                      </td>
+                      <td className="py-2 px-4 ">{item.name}
+                      </td>
+                      <td className="py-2 px-4 flex items-center gap-1">{item.ip}<CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
+
+                      <td className="py-2 px-4">{item.location}</td>
+                      <td className="py-2 px-4 text-blue-500 cursor-pointer flex items-center gap-1">{item.timestamp} <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
+                      <td className="py-2 px-4">{renderStatus(item.status)}</td>
+                      <td className="py-2 px-4 text-center">
+                        <label className="switch">
+                          <input type="checkbox" />
+                          <span className="slider"></span>
+                        </label>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
-        <div className="flex justify-between items-center mt-4">
-          <span>{currentData.length}/{data.length} dữ liệu</span>
-          <div className="flex items-center space-x-2 mx-auto">
+        {/* Pagination */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-4 sm:space-y-0">
+          <span className="text-sm">{currentData.length}/{data.length} dữ liệu</span>
+          
+          <div className="flex items-center space-x-2">
             {/* Nút Previous */}
             <button
               className="p-2  flex items-center justify-center disabled:opacity-50"
@@ -305,14 +304,13 @@ export default function CameraSystem() {
               &gt;
             </button>
           </div>
-          <span className="flex items-center">
+
+          <span className="flex items-center text-sm">
             <span className="text-gray-700 font-medium">Trang</span>
             <div className="ml-3 px-3 py-1 border rounded-lg bg-white shadow-sm text-[#55595D] font-semibold">
               {currentPage}
             </div>
           </span>
-
-
         </div>
 
       </div>

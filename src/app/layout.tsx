@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
-// import Header from "@/components/Header";
-// import Footer from "@/components/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto',
 });
 
 export const metadata: Metadata = {
@@ -27,16 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-cover bg-center`}
-        // style={{ backgroundImage: "url('https://i.pinimg.com/originals/aa/c4/79/aac47997d1f700b9dbd0af658368120e.jpg')" }}
+        className={`${roboto.variable} font-roboto antialiased bg-cover bg-center`}
       >
-        {/* <div className="navbar">
-          <Header />
-        </div> */}
         <div> 
           {children}
         </div>
-        {/* <Footer /> */}
       </body>
     </html>
   );

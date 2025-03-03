@@ -1,11 +1,11 @@
 "use client";
-import { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import "./switch.css";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot, CopyIcon, HardDrive, ChevronsUpDown, Check, Filter, ChevronsUp, ChevronsDown } from "lucide-react";
 import { cameras } from "./camera_data";
 import { ComputingAI } from "./ComputingAI_data";
-import { Listbox, Popover, Transition } from "@headlessui/react";
+import { Listbox, Popover, PopoverPanel, Transition } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CameraSystem() {
@@ -15,7 +15,7 @@ export default function CameraSystem() {
   const [selectedFilter, setSelectedFilter] = useState("Tất cả");
   const itemsPerPage = 10;
   const data = selectedData === "camera" ? cameras : ComputingAI;
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
   const filterOptions = ["Tất cả", "Đang hoạt động", "Kích hoạt thất bại", "Lỗi xác thực"];
 
 
@@ -183,7 +183,7 @@ export default function CameraSystem() {
               <div className="relative">
                 <Listbox value={selectedFilter} onChange={setSelectedFilter}>
                   {({ open }) => (
-                    <>
+                    <div>
                       <Listbox.Button className="flex items-center justify-between w-40 px-5 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 whitespace-nowrap">
                         Hiển thị: <span className="font-semibold truncate">{selectedFilter}</span>
                         <span className="ml-2 flex-shrink-0">
@@ -199,8 +199,7 @@ export default function CameraSystem() {
                                 key={idx}
                                 value={option}
                                 className={({ active, selected }) =>
-                                  `${active || selected ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'}
-                                   cursor-pointer px-3 py-2 text-sm whitespace-nowrap`
+                                  `${active || selected ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'} cursor-pointer px-3 py-2 text-sm whitespace-nowrap`
                                 }
                               >
                                 {({ selected }) => (
@@ -214,49 +213,55 @@ export default function CameraSystem() {
                           </Listbox.Options>
                         </div>
                       )}
-                    </>
+                    </div>
                   )}
                 </Listbox>
               </div>
+              <div>
+                <Popover className="relative">
+                  {({ open }) => (
+                    <>
+                      <Popover.Button className="p-2 border rounded-lg bg-white hover:bg-gray-100">
+                        <FilterListIcon className="w-6 h-6 text-gray-600" />
+                      </Popover.Button>
 
-              <Popover className="relative">
-                <Popover.Button className="p-2 border rounded-lg bg-white hover:bg-gray-100">
-                  <FilterListIcon className="w-6 h-6 text-gray-600" />
-                </Popover.Button>
-
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="opacity-0 scale-95"
-                  enterTo="opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="opacity-100 scale-100"
-                  leaveTo="opacity-0 scale-95"
-                >
-                  <Popover.Panel className="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg border border-gray-300 z-20">
-                    <div className="flex items-center justify-between p-3 border-b">
-                      <span className="font-semibold">Lọc theo công ty</span>
-                      <button className="text-gray-500 hover:text-gray-700">
-                        &times;
-                      </button>
-                    </div>
-                    <div className="p-3 space-y-2">
-                      {companies.map((company) => (
-                        <label key={company} className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={selectedCompanies.includes(company)}
-                            onChange={() => toggleCompany(company)}
-                            className="w-4 h-4 text-blue-500 border-gray-300 rounded"
-                          />
-                          {company}
-                        </label>
-                      ))}
-                    </div>
-                  </Popover.Panel>
-                </Transition>
-              </Popover>
-
+                      <AnimatePresence>
+                        {open && (
+                          <Popover.Panel static className="absolute left-0 mt-2 w-56 z-20">
+                            <motion.div
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{ duration: 0.2 }}
+                              className="bg-white shadow-lg rounded-lg border border-gray-300"
+                            >
+                              <div className="flex items-center justify-between p-3 border-b">
+                                <span className="font-semibold">Lọc theo công ty</span>
+                                <button className="text-gray-500 hover:text-gray-700">
+                                  &times;
+                                </button>
+                              </div>
+                              <div className="p-3 space-y-2">
+                                {companies.map((company) => (
+                                  <label key={company} className="flex items-center gap-2">
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedCompanies.includes(company)}
+                                      onChange={() => toggleCompany(company)}
+                                      className="w-4 h-4 text-blue-500 border-gray-300 rounded"
+                                    />
+                                    {company}
+                                  </label>
+                                ))}
+                              </div>
+                            </motion.div>
+                          </Popover.Panel>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )}
+                </Popover>
+              </div>
               <button className="px-3 py-2 rounded-lg bg-black text-white flex items-center space-x-2 text-sm sm:text-base">
                 <CirclePlus className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>Tạo mới</span>

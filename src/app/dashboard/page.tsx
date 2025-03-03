@@ -2,46 +2,19 @@
 import { useState } from "react";
 import "./switch.css";
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot, CopyIcon } from "lucide-react";
+import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot, CopyIcon, HardDrive } from "lucide-react";
+import { cameras } from "./camera_data";
+import { ComputingAI } from "./ComputingAI_data";
 
 export default function CameraSystem() {
-  const [cameras] = useState([
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Lỗi xác thực" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Sai loại thiết bị" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Mất kết nối" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã tắt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã bị khóa" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang hoạt động" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Lỗi xác thực" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Sai loại thiết bị" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Mất kết nối" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã tắt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã bị khóa" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-  ]);
   const [isGridLayout, setIsGridLayout] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedData, setSelectedData] = useState("camera");
 
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(cameras.length / itemsPerPage);
-  const currentCameras = cameras.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  // const statusColors = {
-  //   "Đang hoạt động": "text-green-500",
-  //   "Kích hoạt thất bại": "text-red-500",
-  //   "Đang kích hoạt": "text-blue-500",
-  //   "Lỗi xác thực": "text-orange-500 bg-[#FFF1E0] rounded-md ",
-  //   "Sai loại thiết bị": "text-orange-500",
-  //   "Mất kết nối": "text-orange-500",
-  //   "Đã tắt": "text-gray-500",
-  //   "Đã bị khóa": "text-orange-500",
-  // };
+  const data = selectedData === "camera" ? cameras : ComputingAI;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const tagStatuses = [
     "Lỗi xác thực",
@@ -50,6 +23,7 @@ export default function CameraSystem() {
     "Đã tắt",
     "Đã bị khóa",
     "Đang hoạt động",
+    "Kích hoạt thất bại"
   ];
 
   const tagStyles: Record<string, string> = {
@@ -59,7 +33,7 @@ export default function CameraSystem() {
     "Đã tắt": "text-[#808080] bg-[#E3E5E5]",
     "Đã bị khóa": "text-[#FF7A00] bg-[#FFF1E0]",
     "Đang hoạt động": "text-[#22AE68] bg-[#DFF5E8]",
-
+    "Kích hoạt thất bại":"bg-[#FFE3E3] text-[#E42727]"
   };
 
   const statusColors: Record<string, string> = {
@@ -82,11 +56,31 @@ export default function CameraSystem() {
           {["Đang hoạt động"].includes(status) && (
             <Circle size={16} className="inline-block mr-1" />
           )}
+          {["Kích hoạt thất bại"].includes(status) && (
+            <Circle size={16} className="inline-block mr-1" />
+          )}
           {status}
         </span>
       );
     }
     return <span className={statusColors[status] || "text-gray-500"}>{status}</span>;
+  };
+
+  const renderIcon = (dataType: string) => {
+    if (dataType === "camera") {
+      return <Cctv size={64} className="text-gray-400" />;
+    } else if (dataType === "computingAI") {
+      return <HardDrive size={64} className="text-gray-400" />;
+    }
+    return null;
+  };
+  const renderIconSmall = (dataType: string) => {
+    if (dataType === "camera") {
+      return <Cctv size={16} className="text-gray-400" />;
+    } else if (dataType === "computingAI") {
+      return <HardDrive size={16} className="text-gray-400" />;
+    }
+    return null;
   };
   return (
     <div className="container mx-auto p-6">
@@ -96,14 +90,22 @@ export default function CameraSystem() {
           <div className="flex items-center space-x-4 mb-4">
 
             <div className="flex justify-center items-center space-x-2">
-              <button className="px-4 py-2 rounded-lg bg-blue-100 text-blue-600 flex items-center space-x-2" style={{ fontSize: "16px" }}>
+              <button
+                className={`px-4 py-2 rounded-lg ${selectedData === "camera" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2`}
+                style={{ fontSize: "16px" }}
+                onClick={() => setSelectedData("camera")}
+              >
                 <Cctv size={20} />
                 <span>Camera</span>
               </button>
             </div>
 
             <div className="flex justify-center items-center space-x-2">
-              <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600 flex items-center space-x-2" style={{ fontSize: "16px" }}>
+              <button
+                className={`px-4 py-2 rounded-lg ${selectedData === "computingAI" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2`}
+                style={{ fontSize: "16px" }}
+                onClick={() => setSelectedData("computingAI")}
+              >
                 <Cpu size={20} />
                 <span>Computing AI</span>
               </button>
@@ -163,27 +165,27 @@ export default function CameraSystem() {
         <div className="overflow-x-auto rounded-lg">
           {isGridLayout ? (
             <div className="grid grid-cols-5 gap-4">
-              {currentCameras.map((camera, index) => (
+              {currentData.map((item, index) => (
                 <div key={index} className="bg-white p-2 rounded-lg shadow relative w-56">
                   <div className="flex flex-col items-center py-4">
-                    <Cctv size={64} className="text-gray-400" />
-                    {renderStatus(camera.status)}
+                    {renderIcon(selectedData)}
+                    {renderStatus(item.status)}
                   </div>
                   <div className="border-t p-4">
-                    <h2 className="font-semibold flex items-center gap-2 mb-2">
-                      <Cctv size={16} /> {camera.name}
-                    </h2>
+                    <p className=" flex items-center gap-2 mb-2 ">
+                      {renderIconSmall(selectedData)} <span className="text-[#55595D]"> {item.name}</span>
+                    </p>
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-medium text-gray-600">Mã ID</span>
                       <div className="flex items-center gap-1">
-                        <a href="#" className="text-blue-500 hover:underline">{camera.id}</a>
+                        <a href="#" className="text-blue-500 hover:underline">{item.id}</a>
                         <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
                       </div>
                     </div>
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-medium text-gray-600">IP</span>
                       <div className="flex items-center gap-1">
-                        <a href="#" className="text-blue-500 hover:underline">{camera.ip}</a>
+                        <a href="#" className="text-blue-500 hover:underline">{item.ip}</a>
                         <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
                       </div>
                     </div>
@@ -204,7 +206,7 @@ export default function CameraSystem() {
                 <tr>
                   <th className="py-2 px-4 text-[#8E95A9]">#</th>
                   <th className="py-2 px-4 text-[#8E95A9]">Mã ID</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Tên camera</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Tên thiết bị</th>
                   <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ IP/domain</th>
                   <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ</th>
                   <th className="py-2 px-4 text-[#8E95A9]">Tọa độ vị trí</th>
@@ -213,19 +215,19 @@ export default function CameraSystem() {
                 </tr>
               </thead>
               <tbody>
-                {currentCameras.map((camera, index) => (
+                {currentData.map((item, index) => (
                   <tr key={index} className="border-b hover:bg-gray-50">
                     <td className="py-2 px-4 text-center">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td className="py-2 px-4 flex items-center gap-1">{camera.id}
-                    <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                    <td className="py-2 px-4 flex items-center gap-1">{item.id}
+                      <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
                     </td>
-                    <td className="py-2 px-4 ">{camera.name}
+                    <td className="py-2 px-4 ">{item.name}
                     </td>
-                    <td className="py-2 px-4 flex items-center gap-1">{camera.ip}<CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-                    
-                    <td className="py-2 px-4">{camera.location}</td>
-                    <td className="py-2 px-4 text-blue-500 cursor-pointer flex items-center gap-1">{camera.timestamp} <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-                    <td className="py-2 px-4">{renderStatus(camera.status)}</td>
+                    <td className="py-2 px-4 flex items-center gap-1">{item.ip}<CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
+
+                    <td className="py-2 px-4">{item.location}</td>
+                    <td className="py-2 px-4 text-blue-500 cursor-pointer flex items-center gap-1">{item.timestamp} <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
+                    <td className="py-2 px-4">{renderStatus(item.status)}</td>
                     <td className="py-2 px-4 text-center">
                       <label className="switch">
                         <input type="checkbox" />
@@ -240,7 +242,7 @@ export default function CameraSystem() {
         </div>
 
         <div className="flex justify-between items-center mt-4">
-          <span>{currentCameras.length}/{cameras.length} dữ liệu</span>
+          <span>{currentData.length}/{data.length} dữ liệu</span>
           <div className="flex items-center space-x-2 mx-auto">
             {/* Nút Previous */}
             <button

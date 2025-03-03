@@ -1,47 +1,35 @@
 "use client";
-import { useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import "./switch.css";
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot, CopyIcon } from "lucide-react";
+import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot, CopyIcon, HardDrive, ChevronsUpDown, Check, Filter, ChevronsUp, ChevronsDown } from "lucide-react";
+import { cameras } from "./camera_data";
+import { ComputingAI } from "./ComputingAI_data";
+import { Listbox, Popover, Transition } from "@headlessui/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function CameraSystem() {
-  const [cameras] = useState([
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Lỗi xác thực" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Sai loại thiết bị" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Mất kết nối" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã tắt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã bị khóa" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang hoạt động" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Lỗi xác thực" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Sai loại thiết bị" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Mất kết nối" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã tắt" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đã bị khóa" },
-    { id: "MHE1145551", name: "Camera phòng họp", ip: "211.445.026.16", location: "420 Đại lộ Bình Dương, Khu phố 7", timestamp: "11.047019,106.838356", status: "Đang kích hoạt" },
-  ]);
   const [isGridLayout, setIsGridLayout] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [selectedData, setSelectedData] = useState("camera");
+  const [selectedFilter, setSelectedFilter] = useState("Tất cả");
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(cameras.length / itemsPerPage);
-  const currentCameras = cameras.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const data = selectedData === "camera" ? cameras : ComputingAI;
+  const [isOpen, setIsOpen] = useState(false);
+  const filterOptions = ["Tất cả", "Đang hoạt động", "Kích hoạt thất bại", "Lỗi xác thực"];
 
-  // const statusColors = {
-  //   "Đang hoạt động": "text-green-500",
-  //   "Kích hoạt thất bại": "text-red-500",
-  //   "Đang kích hoạt": "text-blue-500",
-  //   "Lỗi xác thực": "text-orange-500 bg-[#FFF1E0] rounded-md ",
-  //   "Sai loại thiết bị": "text-orange-500",
-  //   "Mất kết nối": "text-orange-500",
-  //   "Đã tắt": "text-gray-500",
-  //   "Đã bị khóa": "text-orange-500",
-  // };
+
+
+  const companies = [
+    "Oryza Systems",
+    "Oryza Services",
+    "PC09",
+    "PC02",
+    "Tiên Tiến",
+  ];
+
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>(companies);
+
 
   const tagStatuses = [
     "Lỗi xác thực",
@@ -50,6 +38,7 @@ export default function CameraSystem() {
     "Đã tắt",
     "Đã bị khóa",
     "Đang hoạt động",
+    "Kích hoạt thất bại"
   ];
 
   const tagStyles: Record<string, string> = {
@@ -59,7 +48,7 @@ export default function CameraSystem() {
     "Đã tắt": "text-[#808080] bg-[#E3E5E5]",
     "Đã bị khóa": "text-[#FF7A00] bg-[#FFF1E0]",
     "Đang hoạt động": "text-[#22AE68] bg-[#DFF5E8]",
-
+    "Kích hoạt thất bại": "bg-[#FFE3E3] text-[#E42727]"
   };
 
   const statusColors: Record<string, string> = {
@@ -71,15 +60,13 @@ export default function CameraSystem() {
     if (tagStatuses.includes(status)) {
       return (
         <span
-          className={`inline-block px-2 py-0.5 text-sm border rounded-3xl ${tagStyles[status]}`}
+          className={`inline-block px-2 py-0.5 text-sm border rounded-3xl max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap ${tagStyles[status]}`}
+          title={status} // Hiển thị tooltip khi hover vào
         >
           {["Lỗi xác thực", "Sai loại thiết bị", "Mất kết nối", "Đã bị khóa"].includes(status) && (
             <CircleAlert size={16} className="inline-block mr-1" />
           )}
-          {["Đã tắt"].includes(status) && (
-            <Circle size={16} className="inline-block mr-1" />
-          )}
-          {["Đang hoạt động"].includes(status) && (
+          {["Đã tắt", "Đang hoạt động", "Kích hoạt thất bại"].includes(status) && (
             <Circle size={16} className="inline-block mr-1" />
           )}
           {status}
@@ -88,36 +75,87 @@ export default function CameraSystem() {
     }
     return <span className={statusColors[status] || "text-gray-500"}>{status}</span>;
   };
+
+
+  const renderIcon = (dataType: string) => {
+    if (dataType === "camera") {
+      return <Cctv size={64} className="text-gray-400" />;
+    } else if (dataType === "computingAI") {
+      return <HardDrive size={64} className="text-gray-400" />;
+    }
+    return null;
+  };
+  const renderIconSmall = (dataType: string) => {
+    if (dataType === "camera") {
+      return <Cctv size={16} className="text-gray-400" />;
+    } else if (dataType === "computingAI") {
+      return <HardDrive size={16} className="text-gray-400" />;
+    }
+    return null;
+  };
+
+  // Add filtered data logic
+  const getFilteredData = () => {
+    if (selectedFilter === "Tất cả") {
+      return data;
+    }
+    return data.filter(item => item.status === selectedFilter);
+  };
+
+  // Update currentData to use filtered data
+  const filteredData = getFilteredData();
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const currentData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Reset to first page when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedFilter]);
+
+  const toggleCompany = (company: string) => {
+    setSelectedCompanies((prev) =>
+      prev.includes(company)
+        ? prev.filter((c) => c !== company)
+        : [...prev, company]
+    );
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      <div className="bg-white shadow rounded-2xl p-4">
-        <h2 className="text-xl font-semibold mb-4">Tích hợp thiết bị</h2>
-        <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center space-x-4 mb-4">
+    <div className="container mx-auto p-2 sm:p-4 md:p-6">
+      <div className="bg-white shadow rounded-2xl p-2 sm:p-4">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4">Tích hợp thiết bị</h2>
 
-            <div className="flex justify-center items-center space-x-2">
-              <button className="px-4 py-2 rounded-lg bg-blue-100 text-blue-600 flex items-center space-x-2" style={{ fontSize: "16px" }}>
-                <Cctv size={20} />
-                <span>Camera</span>
-              </button>
-            </div>
+        {/* Device type buttons */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-4 sm:space-y-0">
+          <div className="flex flex-wrap items-center gap-2 mb-4 w-full sm:w-auto">
+            <button
+              className={`px-3 py-2 rounded-lg ${selectedData === "camera" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2 text-sm sm:text-base`}
+              onClick={() => setSelectedData("camera")}
+            >
+              <Cctv className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Camera</span>
+            </button>
 
-            <div className="flex justify-center items-center space-x-2">
-              <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600 flex items-center space-x-2" style={{ fontSize: "16px" }}>
-                <Cpu size={20} />
-                <span>Computing AI</span>
-              </button>
-            </div>
-            <div className="flex justify-center items-center space-x-2">
-              <button className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600 flex items-center space-x-2" style={{ fontSize: "16" }}>
-                <Ghost size={20} />
-                <span> Thiết bị khác </span>
-              </button>
-            </div>
+            <button
+              className={`px-3 py-2 rounded-lg ${selectedData === "computingAI" ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600"} flex items-center space-x-2 text-sm sm:text-base`}
+              onClick={() => setSelectedData("computingAI")}
+            >
+              <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Computing AI</span>
+            </button>
 
+            <button className="px-3 py-2 rounded-lg bg-gray-100 text-gray-600 flex items-center space-x-2 text-sm sm:text-base">
+              <Ghost className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Thiết bị khác</span>
+            </button>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="relative w-1/3">
+
+          {/* Search and filters */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+            <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
@@ -125,65 +163,133 @@ export default function CameraSystem() {
                 className="border p-2 pl-10 rounded-lg w-full"
               />
             </div>
-            <div className="flex items-center space-x-2">
+
+            <div className="flex flex-wrap items-center gap-2">
               <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
                 <button
                   onClick={() => setIsGridLayout(true)}
                   className={`p-2 rounded-lg ${isGridLayout ? "bg-white shadow" : "text-gray-400"}`}
                 >
-                  <LayoutGrid size={20} />
+                  <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <button
                   onClick={() => setIsGridLayout(false)}
                   className={`p-2 rounded-lg ${!isGridLayout ? "bg-white shadow" : "text-gray-400"}`}
                 >
-                  <List size={20} />
+                  <List className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
-              <select className="border p-2 rounded-lg">
-                <option value="" disabled hidden>Hiển thị</option>
-                <option>Tất cả</option>
-                <option>Đang kích hoạt</option>
-                <option>Kích hoạt thất bại</option>
-                <option>Lỗi xác thực</option>
-              </select>
 
-              <FilterListIcon />
-              <div className="flex justify-center items-center space-x-2">
-                <button className="px-4 py-2 rounded-lg bg-black text-white flex items-center space-x-2">
-                  <CirclePlus size={20} />
-                  <span>Tạo mới</span>
-                </button>
+              <div className="relative">
+                <Listbox value={selectedFilter} onChange={setSelectedFilter}>
+                  {({ open }) => (
+                    <>
+                      <Listbox.Button className="flex items-center justify-between w-40 px-5 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 whitespace-nowrap">
+                        Hiển thị: <span className="font-semibold truncate">{selectedFilter}</span>
+                        <span className="ml-2 flex-shrink-0">
+                          {open ? <ChevronsUp size={16} className="text-gray-500" /> : <ChevronsDown size={16} className="text-gray-500" />}
+                        </span>
+                      </Listbox.Button>
+
+                      {open && (
+                        <div className="absolute mt-1 w-40 bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300 z-10">
+                          <Listbox.Options static>
+                            {filterOptions.map((option, idx) => (
+                              <Listbox.Option
+                                key={idx}
+                                value={option}
+                                className={({ active, selected }) =>
+                                  `${active || selected ? 'bg-gray-200 font-semibold' : 'hover:bg-gray-100'}
+                                   cursor-pointer px-3 py-2 text-sm whitespace-nowrap`
+                                }
+                              >
+                                {({ selected }) => (
+                                  <div className="flex items-center justify-between">
+                                    <span className="truncate">{option}</span>
+                                    {selected && <Check size={16} className="text-gray-700 flex-shrink-0" />}
+                                  </div>
+                                )}
+                              </Listbox.Option>
+                            ))}
+                          </Listbox.Options>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </Listbox>
               </div>
+
+              <Popover className="relative">
+                <Popover.Button className="p-2 border rounded-lg bg-white hover:bg-gray-100">
+                  <FilterListIcon className="w-6 h-6 text-gray-600" />
+                </Popover.Button>
+
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="opacity-0 scale-95"
+                  enterTo="opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="opacity-100 scale-100"
+                  leaveTo="opacity-0 scale-95"
+                >
+                  <Popover.Panel className="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-lg border border-gray-300 z-20">
+                    <div className="flex items-center justify-between p-3 border-b">
+                      <span className="font-semibold">Lọc theo công ty</span>
+                      <button className="text-gray-500 hover:text-gray-700">
+                        &times;
+                      </button>
+                    </div>
+                    <div className="p-3 space-y-2">
+                      {companies.map((company) => (
+                        <label key={company} className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedCompanies.includes(company)}
+                            onChange={() => toggleCompany(company)}
+                            className="w-4 h-4 text-blue-500 border-gray-300 rounded"
+                          />
+                          {company}
+                        </label>
+                      ))}
+                    </div>
+                  </Popover.Panel>
+                </Transition>
+              </Popover>
+
+              <button className="px-3 py-2 rounded-lg bg-black text-white flex items-center space-x-2 text-sm sm:text-base">
+                <CirclePlus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Tạo mới</span>
+              </button>
             </div>
-
           </div>
         </div>
 
+        {/* Grid/List View */}
         <div className="overflow-x-auto rounded-lg">
           {isGridLayout ? (
-            <div className="grid grid-cols-5 gap-4">
-              {currentCameras.map((camera, index) => (
-                <div key={index} className="bg-white p-2 rounded-lg shadow relative w-56">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {currentData.map((item, index) => (
+                <div key={index} className="bg-white p-2 rounded-lg shadow relative w-full">
                   <div className="flex flex-col items-center py-4">
-                    <Cctv size={64} className="text-gray-400" />
-                    {renderStatus(camera.status)}
+                    {renderIcon(selectedData)}
+                    {renderStatus(item.status)}
                   </div>
                   <div className="border-t p-4">
-                    <h2 className="font-semibold flex items-center gap-2 mb-2">
-                      <Cctv size={16} /> {camera.name}
-                    </h2>
+                    <p className=" flex items-center gap-2 mb-2 ">
+                      {renderIconSmall(selectedData)} <span className="text-[#55595D]"> {item.name}</span>
+                    </p>
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-medium text-gray-600">Mã ID</span>
                       <div className="flex items-center gap-1">
-                        <a href="#" className="text-blue-500 hover:underline">{camera.id}</a>
+                        <a href="#" className="text-blue-500 hover:underline">{item.id}</a>
                         <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
                       </div>
                     </div>
                     <div className="mb-2 flex items-center justify-between">
                       <span className="font-medium text-gray-600">IP</span>
                       <div className="flex items-center gap-1">
-                        <a href="#" className="text-blue-500 hover:underline">{camera.ip}</a>
+                        <a href="#" className="text-blue-500 hover:underline">{item.ip}</a>
                         <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
                       </div>
                     </div>
@@ -195,53 +301,104 @@ export default function CameraSystem() {
                     </div>
                   </div>
                 </div>
-
               ))}
             </div>
           ) : (
-            <table className="min-w-full text-sm text-left">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="py-2 px-4 text-[#8E95A9]">#</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Mã ID</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Tên camera</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ IP/domain</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Tọa độ vị trí</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Trạng thái</th>
-                  <th className="py-2 px-4 text-[#8E95A9]">Bật/Tắt</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentCameras.map((camera, index) => (
-                  <tr key={index} className="border-b hover:bg-gray-50">
-                    <td className="py-2 px-4 text-center">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td className="py-2 px-4 flex items-center gap-1">{camera.id}
-                    <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
-                    </td>
-                    <td className="py-2 px-4 ">{camera.name}
-                    </td>
-                    <td className="py-2 px-4 flex items-center gap-1">{camera.ip}<CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-                    
-                    <td className="py-2 px-4">{camera.location}</td>
-                    <td className="py-2 px-4 text-blue-500 cursor-pointer flex items-center gap-1">{camera.timestamp} <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-                    <td className="py-2 px-4">{renderStatus(camera.status)}</td>
-                    <td className="py-2 px-4 text-center">
-                      <label className="switch">
-                        <input type="checkbox" />
-                        <span className="slider"></span>
-                      </label>
-                    </td>
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+              <table className="w-full text-sm text-left rtl:text-right">
+                <thead className="text-xs uppercase bg-gray-100">
+                  <tr>
+                    <th scope="col" className="p-3 xl:p-4 text-[#8E95A9]">#</th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center space-x-10 text-[#8E95A9]">
+                        Mã ID
+
+                      </div>
+                    </th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center text-[#8E95A9]">
+                        Tên thiết bị
+                      </div>
+                    </th>
+                    <th scope="col" className="hidden sm:table-cell p-3 xl:p-4">
+                      <div className="flex items-center text-[#8E95A9]">
+                        Địa chỉ IP/domain  <ChevronsUpDown size={16} strokeWidth={3} />
+                      </div>
+                    </th>
+                    <th scope="col" className="hidden md:table-cell p-3 xl:p-4">
+                      <div className="flex items-center text-[#8E95A9]">
+                        Địa chỉ
+                      </div>
+                    </th>
+                    <th scope="col" className="hidden lg:table-cell p-3 xl:p-4">
+                      <div className="flex items-center text-[#8E95A9]">
+                        Tọa độ vị trí  <ChevronsUpDown size={16} strokeWidth={3} />
+                      </div>
+                    </th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center text-[#8E95A9]">
+                        Trạng thái  <ChevronsUpDown size={16} strokeWidth={3} />
+                      </div>
+                    </th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center text-[#8E95A9]">
+                        Bật/Tắt  <ChevronsUpDown size={16} strokeWidth={3} />
+                      </div>
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {currentData.map((item, index) => (
+                    <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                      <td className="p-3 xl:p-4">
+                        {(currentPage - 1) * itemsPerPage + index + 1}
+                      </td>
+                      <td className="p-3 xl:p-4">
+                        <div className="flex items-center gap-1">
+                          <span className="font-medium">{item.id}</span>
+                          <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                        </div>
+                      </td>
+                      <td className="p-3 xl:p-4 font-medium">
+                        {item.name}
+                      </td>
+                      <td className="hidden sm:table-cell p-3 xl:p-4">
+                        <div className="flex items-center gap-1">
+                          {item.ip}
+                          <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                        </div>
+                      </td>
+                      <td className="hidden md:table-cell p-3 xl:p-4">
+                        {item.location}
+                      </td>
+                      <td className="hidden lg:table-cell p-3 xl:p-4">
+                        <div className="flex items-center gap-1 ">
+                          {item.timestamp}
+                          <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                        </div>
+                      </td>
+                      <td className="p-3 xl:p-4">
+                        {renderStatus(item.status)}
+                      </td>
+                      <td className="p-3 xl:p-4">
+                        <label className="switch">
+                          <input type="checkbox" />
+                          <span className="slider"></span>
+                        </label>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
-        <div className="flex justify-between items-center mt-4">
-          <span>{currentCameras.length}/{cameras.length} dữ liệu</span>
-          <div className="flex items-center space-x-2 mx-auto">
+        {/* Pagination */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-4 sm:space-y-0">
+          <span className="text-sm">{filteredData.length}/{data.length} dữ liệu</span>
+
+          <div className="flex items-center space-x-2">
             {/* Nút Previous */}
             <button
               className="p-2  flex items-center justify-center disabled:opacity-50"
@@ -303,14 +460,13 @@ export default function CameraSystem() {
               &gt;
             </button>
           </div>
-          <span className="flex items-center">
+
+          <span className="flex items-center text-sm">
             <span className="text-gray-700 font-medium">Trang</span>
             <div className="ml-3 px-3 py-1 border rounded-lg bg-white shadow-sm text-[#55595D] font-semibold">
               {currentPage}
             </div>
           </span>
-
-
         </div>
 
       </div>

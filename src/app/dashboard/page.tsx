@@ -2,7 +2,7 @@
 import { useState } from "react";
 import "./switch.css";
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot } from "lucide-react";
+import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot, CopyIcon } from "lucide-react";
 
 export default function CameraSystem() {
   const [cameras] = useState([
@@ -53,13 +53,13 @@ export default function CameraSystem() {
   ];
 
   const tagStyles: Record<string, string> = {
-    "Lỗi xác thực": "text-[#FF7A00] bg-[#FFF1E0] " ,
+    "Lỗi xác thực": "text-[#FF7A00] bg-[#FFF1E0] ",
     "Sai loại thiết bị": "text-[#FF7A00] bg-[#FFF1E0]",
     "Mất kết nối": "text-[#FF7A00] bg-[#FFF1E0]",
     "Đã tắt": "text-[#808080] bg-[#E3E5E5]",
     "Đã bị khóa": "text-[#FF7A00] bg-[#FFF1E0]",
     "Đang hoạt động": "text-[#22AE68] bg-[#DFF5E8]",
-    
+
   };
 
   const statusColors: Record<string, string> = {
@@ -71,12 +71,12 @@ export default function CameraSystem() {
     if (tagStatuses.includes(status)) {
       return (
         <span
-          className={`inline-block px-2 py-0.5 text-sm border rounded-md ${tagStyles[status]}`}
+          className={`inline-block px-2 py-0.5 text-sm border rounded-3xl ${tagStyles[status]}`}
         >
           {["Lỗi xác thực", "Sai loại thiết bị", "Mất kết nối", "Đã bị khóa"].includes(status) && (
             <CircleAlert size={16} className="inline-block mr-1" />
           )}
-           {["Đã tắt"].includes(status) && (
+          {["Đã tắt"].includes(status) && (
             <Circle size={16} className="inline-block mr-1" />
           )}
           {["Đang hoạt động"].includes(status) && (
@@ -161,39 +161,82 @@ export default function CameraSystem() {
         </div>
 
         <div className="overflow-x-auto rounded-lg">
-          <table className={`min-w-full text-sm text-left ${isGridLayout ? 'grid-layout' : ''}`}>
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="py-2 px-4">#</th>
-                <th className="py-2 px-4">Mã ID</th>
-                <th className="py-2 px-4">Tên camera</th>
-                <th className="py-2 px-4">Địa chỉ IP/domain</th>
-                <th className="py-2 px-4">Địa chỉ</th>
-                <th className="py-2 px-4">Tọa độ vị trí</th>
-                <th className="py-2 px-4">Trạng thái</th>
-                <th className="py-2 px-4">Bật/Tắt</th>
-              </tr>
-            </thead>
-            <tbody>
+          {isGridLayout ? (
+            <div className="grid grid-cols-5 gap-4">
               {currentCameras.map((camera, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
-                  <td className="py-2 px-4 text-center">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td className="py-2 px-4">{camera.id}</td>
-                  <td className="py-2 px-4">{camera.name}</td>
-                  <td className="py-2 px-4">{camera.ip}</td>
-                  <td className="py-2 px-4">{camera.location}</td>
-                  <td className="py-2 px-4 text-blue-500 cursor-pointer">{camera.timestamp}</td>
-                  <td className="py-2 px-4">{renderStatus(camera.status)}</td>
-                  <td className="py-2 px-4 text-center">
-                    <label className="switch">
-                      <input type="checkbox" />
-                      <span className="slider"></span>
-                    </label>
-                  </td>
-                </tr>
+                <div key={index} className="bg-white p-2 rounded-lg shadow relative w-56">
+                  <div className="flex flex-col items-center py-4">
+                    <Cctv size={64} className="text-gray-400" />
+                    {renderStatus(camera.status)}
+                  </div>
+                  <div className="border-t p-4">
+                    <h2 className="font-semibold flex items-center gap-2 mb-2">
+                      <Cctv size={16} /> {camera.name}
+                    </h2>
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="font-medium text-gray-600">Mã ID</span>
+                      <div className="flex items-center gap-1">
+                        <a href="#" className="text-blue-500 hover:underline">{camera.id}</a>
+                        <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                      </div>
+                    </div>
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="font-medium text-gray-600">IP</span>
+                      <div className="flex items-center gap-1">
+                        <a href="#" className="text-blue-500 hover:underline">{camera.ip}</a>
+                        <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <label className="switch">
+                        <input type="checkbox" />
+                        <span className="slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
               ))}
-            </tbody>
-          </table>
+            </div>
+          ) : (
+            <table className="min-w-full text-sm text-left">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="py-2 px-4 text-[#8E95A9]">#</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Mã ID</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Tên camera</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ IP/domain</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Tọa độ vị trí</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Trạng thái</th>
+                  <th className="py-2 px-4 text-[#8E95A9]">Bật/Tắt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentCameras.map((camera, index) => (
+                  <tr key={index} className="border-b hover:bg-gray-50">
+                    <td className="py-2 px-4 text-center">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                    <td className="py-2 px-4 flex items-center gap-1">{camera.id}
+                    <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                    </td>
+                    <td className="py-2 px-4 ">{camera.name}
+                    </td>
+                    <td className="py-2 px-4 flex items-center gap-1">{camera.ip}<CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
+                    
+                    <td className="py-2 px-4">{camera.location}</td>
+                    <td className="py-2 px-4 text-blue-500 cursor-pointer flex items-center gap-1">{camera.timestamp} <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
+                    <td className="py-2 px-4">{renderStatus(camera.status)}</td>
+                    <td className="py-2 px-4 text-center">
+                      <label className="switch">
+                        <input type="checkbox" />
+                        <span className="slider"></span>
+                      </label>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         <div className="flex justify-between items-center mt-4">

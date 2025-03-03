@@ -45,18 +45,13 @@ export default function CameraSystem() {
     if (tagStatuses.includes(status)) {
       return (
         <span
-          className={`inline-block px-2 py-0.5 text-sm border rounded-3xl ${tagStyles[status]}`}
+          className={`inline-block px-2 py-0.5 text-sm border rounded-3xl max-w-[120px] overflow-hidden text-ellipsis whitespace-nowrap ${tagStyles[status]}`}
+          title={status} // Hiển thị tooltip khi hover vào
         >
           {["Lỗi xác thực", "Sai loại thiết bị", "Mất kết nối", "Đã bị khóa"].includes(status) && (
             <CircleAlert size={16} className="inline-block mr-1" />
           )}
-          {["Đã tắt"].includes(status) && (
-            <Circle size={16} className="inline-block mr-1" />
-          )}
-          {["Đang hoạt động"].includes(status) && (
-            <Circle size={16} className="inline-block mr-1" />
-          )}
-          {["Kích hoạt thất bại"].includes(status) && (
+          {["Đã tắt", "Đang hoạt động", "Kích hoạt thất bại"].includes(status) && (
             <Circle size={16} className="inline-block mr-1" />
           )}
           {status}
@@ -65,6 +60,7 @@ export default function CameraSystem() {
     }
     return <span className={statusColors[status] || "text-gray-500"}>{status}</span>;
   };
+  
 
   const renderIcon = (dataType: string) => {
     if (dataType === "camera") {
@@ -196,35 +192,82 @@ export default function CameraSystem() {
               ))}
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm text-left">
-                <thead className="bg-gray-100">
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+              <table className="w-full text-sm text-left rtl:text-right">
+                <thead className="text-xs uppercase bg-gray-100">
                   <tr>
-                    <th className="py-2 px-4 text-[#8E95A9]">#</th>
-                    <th className="py-2 px-4 text-[#8E95A9]">Mã ID</th>
-                    <th className="py-2 px-4 text-[#8E95A9]">Tên thiết bị</th>
-                    <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ IP/domain</th>
-                    <th className="py-2 px-4 text-[#8E95A9]">Địa chỉ</th>
-                    <th className="py-2 px-4 text-[#8E95A9]">Tọa độ vị trí</th>
-                    <th className="py-2 px-4 text-[#8E95A9]">Trạng thái</th>
-                    <th className="py-2 px-4 text-[#8E95A9]">Bật/Tắt</th>
+                    <th scope="col" className="p-3 xl:p-4">#</th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center">
+                        Mã ID
+                      </div>
+                    </th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center">
+                        Tên thiết bị
+                      </div>
+                    </th>
+                    <th scope="col" className="hidden sm:table-cell p-3 xl:p-4">
+                      <div className="flex items-center">
+                        Địa chỉ IP/domain
+                      </div>
+                    </th>
+                    <th scope="col" className="hidden md:table-cell p-3 xl:p-4">
+                      <div className="flex items-center">
+                        Địa chỉ
+                      </div>
+                    </th>
+                    <th scope="col" className="hidden lg:table-cell p-3 xl:p-4">
+                      <div className="flex items-center">
+                        Tọa độ vị trí
+                      </div>
+                    </th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center">
+                        Trạng thái
+                      </div>
+                    </th>
+                    <th scope="col" className="p-3 xl:p-4">
+                      <div className="flex items-center">
+                        Bật/Tắt
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {currentData.map((item, index) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-4 text-center">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                      <td className="py-2 px-4 flex items-center gap-1">{item.id}
-                        <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                    <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                      <td className="p-3 xl:p-4">
+                        {(currentPage - 1) * itemsPerPage + index + 1}
                       </td>
-                      <td className="py-2 px-4 ">{item.name}
+                      <td className="p-3 xl:p-4">
+                        <div className="flex items-center gap-1">
+                          <span className="font-medium">{item.id}</span>
+                          <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                        </div>
                       </td>
-                      <td className="py-2 px-4 flex items-center gap-1">{item.ip}<CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-
-                      <td className="py-2 px-4">{item.location}</td>
-                      <td className="py-2 px-4 text-blue-500 cursor-pointer flex items-center gap-1">{item.timestamp} <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" /></td>
-                      <td className="py-2 px-4">{renderStatus(item.status)}</td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="p-3 xl:p-4 font-medium">
+                        {item.name}
+                      </td>
+                      <td className="hidden sm:table-cell p-3 xl:p-4">
+                        <div className="flex items-center gap-1">
+                          {item.ip}
+                          <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                        </div>
+                      </td>
+                      <td className="hidden md:table-cell p-3 xl:p-4">
+                        {item.location}
+                      </td>
+                      <td className="hidden lg:table-cell p-3 xl:p-4">
+                        <div className="flex items-center gap-1 text-blue-500">
+                          {item.timestamp}
+                          <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
+                        </div>
+                      </td>
+                      <td className="p-3 xl:p-4">
+                        {renderStatus(item.status)}
+                      </td>
+                      <td className="p-3 xl:p-4">
                         <label className="switch">
                           <input type="checkbox" />
                           <span className="slider"></span>

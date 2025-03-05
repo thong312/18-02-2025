@@ -7,6 +7,9 @@ import { Listbox, Popover, PopoverPanel, Transition } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fetchCameras, fetchAiBoxes } from "../lib/data";
 import { Camera, AiBox } from "../lib/types";
+import Pagination from "@/components/Pagination";
+import CreateDeviceModal from "@/components/CreateDeviceModal"; // Add this import
+import { toast, ToastContainer } from "react-toastify";
 
 export default function CameraSystem() {
   const [isGridLayout, setIsGridLayout] = useState(false);
@@ -17,6 +20,9 @@ export default function CameraSystem() {
   const [aiBoxes, setAiBoxes] = useState<AiBox[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [appliedSearchQuery, setAppliedSearchQuery] = useState("");
 
   const itemsPerPage = 10;
   const data = selectedData === "camera" ? cameras : aiBoxes;
@@ -119,10 +125,31 @@ export default function CameraSystem() {
 
   // Add filtered data logic
   const getFilteredData = () => {
-    if (selectedFilter === "Tất cả") {
-      return data;
+    let filtered = data;
+    
+    // Apply search filter if there's a search query
+    if (appliedSearchQuery) {
+      filtered = filtered.filter(searchInData);
     }
-    return data.filter(item => item.status === selectedFilter);
+    
+    // Apply status filter
+    if (selectedFilter !== "Tất cả") {
+      filtered = filtered.filter(item => item.status === selectedFilter);
+    }
+    
+    return filtered;
+  };
+
+  // Add this search function
+  const searchInData = (item: Camera | AiBox) => {
+    const searchLower = appliedSearchQuery.toLowerCase();
+    return (
+      item.id.toLowerCase().includes(searchLower) ||
+      item.name.toLowerCase().includes(searchLower) ||
+      item.ip.toLowerCase().includes(searchLower) ||
+      item.address.toLowerCase().includes(searchLower) ||
+      item.coordinates.toLowerCase().includes(searchLower)
+    );
   };
 
   // Update currentData to use filtered data
@@ -136,14 +163,56 @@ export default function CameraSystem() {
   // Reset to first page when filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedFilter]);
+  }, [selectedData, selectedFilter, appliedSearchQuery]);
 
+  
   const toggleCompany = (company: string) => {
     setSelectedCompanies((prev) =>
       prev.includes(company)
         ? prev.filter((c) => c !== company)
         : [...prev, company]
     );
+  };
+
+  const handleCreateDevice = async (formData: any) => {
+    try {
+      const endpoint = selectedData === 'camera' 
+        ? 'http://localhost:8000/cameras'
+        : 'http://localhost:8000/ai';
+        
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create device');
+      }
+
+      // Refresh data after successful creation
+      if (selectedData === 'camera') {
+        const camerasData = await fetchCameras();
+        setCameras(camerasData);
+        toast.success('Camera created successfully');
+      } else {
+        const aiData = await fetchAiBoxes();
+        setAiBoxes(aiData);
+        toast.success('AI Box created successfully');
+      }
+
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error creating device:', error);
+      // Handle error (show notification, etc.)
+    }
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAppliedSearchQuery(searchQuery);
   };
 
   if (isLoading) {
@@ -156,6 +225,7 @@ export default function CameraSystem() {
 
   return (
     <div className="container mx-auto p-2 sm:p-4 md:p-6">
+      <ToastContainer/>
       <div className="bg-white shadow rounded-2xl p-2 sm:p-4">
         <h2 className="text-lg sm:text-xl font-semibold mb-4">Tích hợp thiết bị</h2>
 
@@ -186,14 +256,21 @@ export default function CameraSystem() {
 
           {/* Search and filters */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <form onSubmit={handleSearch} className="relative w-full sm:w-64">
               <input
                 type="text"
                 placeholder="Tìm kiếm dữ liệu..."
                 className="border p-2 pl-10 rounded-lg w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </div>
+              <button
+                type="submit"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <Search size={20} />
+              </button>
+            </form>
 
             <div className="flex flex-wrap items-center gap-2">
               <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
@@ -248,7 +325,7 @@ export default function CameraSystem() {
                   )}
                 </Listbox>
               </div>
-              <div>
+              <div></div>
                 <Popover className="relative">
                   {({ open }) => (
                     <>
@@ -293,7 +370,10 @@ export default function CameraSystem() {
                   )}
                 </Popover>
               </div>
-              <button className="px-3 py-2 rounded-lg bg-black text-white flex items-center space-x-2 text-sm sm:text-base">
+              <button 
+                onClick={() => setIsModalOpen(true)} 
+                className="px-3 py-2 rounded-lg bg-black text-white flex items-center space-x-2 text-sm sm:text-base"
+              >
                 <CirclePlus className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>Tạo mới</span>
               </button>
@@ -430,82 +510,23 @@ export default function CameraSystem() {
           )}
         </div>
 
-        {/* Pagination */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-4 space-y-4 sm:space-y-0">
-          <span className="text-sm">{filteredData.length}/{data.length} dữ liệu</span>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={data.length}
+          filteredItems={filteredData.length}
+          onPageChange={setCurrentPage}
+        />
 
-          <div className="flex items-center space-x-2">
-            {/* Nút Previous */}
-            <button
-              className="p-2  flex items-center justify-center disabled:opacity-50"
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              &lt;
-            </button>
-
-            {/* Các số trang */}
-            {totalPages > 6 ? (
-              <>
-                <button
-                  className={`w-8 h-8 flex items-center justify-center  ${currentPage === 1 ? 'bg-[#78C6E7] text-white font-bold' : ''}`}
-                  onClick={() => setCurrentPage(1)}
-                >
-                  1
-                </button>
-                {currentPage > 3 && <span className="px-2">...</span>}
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1)
-                  .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
-                  .map(page => (
-                    <button
-                      key={page}
-                      className={`w-8 h-8 flex items-center justify-center  ${currentPage === page ? 'bg-[#78C6E7] text-white font-bold' : ''}`}
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </button>
-                  ))}
-
-                {currentPage < totalPages - 2 && <span className="px-2">...</span>}
-                <button
-                  className={`w-8 h-8 flex items-center justify-center  ${currentPage === totalPages ? 'bg-[#78C6E7] text-white font-bold' : ''}`}
-                  onClick={() => setCurrentPage(totalPages)}
-                >
-                  {totalPages}
-                </button>
-              </>
-            ) : (
-              [...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  className={`w-8 h-8 flex items-center justify-center rounded-md border ${currentPage === i + 1 ? 'bg-[#78C6E7] text-white font-bold' : ''}`}
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))
-            )}
-
-            {/* Nút Next */}
-            <button
-              className="p-2 flex items-center justify-center disabled:opacity-50"
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              &gt;
-            </button>
-          </div>
-
-          <span className="flex items-center text-sm">
-            <span className="text-gray-700 font-medium">Trang</span>
-            <div className="ml-3 px-3 py-1 border rounded-lg bg-white shadow-sm text-[#55595D] font-semibold">
-              {currentPage}
-            </div>
-          </span>
-        </div>
-
+        {isModalOpen && (
+          <CreateDeviceModal
+            isOpen={isModalOpen}
+            deviceType={selectedData === 'camera' ? 'camera' : 'computingAI'}
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={handleCreateDevice}
+          />
+        )}
       </div>
-    </div>
+   
   );
 }

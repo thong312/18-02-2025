@@ -3,22 +3,47 @@ import React, { Fragment, useState, useEffect } from "react";
 import "./switch.css";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { Cctv, CirclePlus, Cpu, Ghost, LayoutGrid, List, Search, CircleAlert, Circle, Dot, CopyIcon, HardDrive, ChevronsUpDown, Check, Filter, ChevronsUp, ChevronsDown } from "lucide-react";
-import { cameras } from "./camera_data";
-import { ComputingAI } from "./ComputingAI_data";
 import { Listbox, Popover, PopoverPanel, Transition } from "@headlessui/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { fetchCameras, fetchAiBoxes } from "../lib/data";
+import { Camera, AiBox } from "../lib/types";
 
 export default function CameraSystem() {
   const [isGridLayout, setIsGridLayout] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedData, setSelectedData] = useState("camera");
   const [selectedFilter, setSelectedFilter] = useState("Tất cả");
+  const [cameras, setCameras] = useState<Camera[]>([]);
+  const [aiBoxes, setAiBoxes] = useState<AiBox[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const itemsPerPage = 10;
-  const data = selectedData === "camera" ? cameras : ComputingAI;
-  // const [isOpen, setIsOpen] = useState(false);
+  const data = selectedData === "camera" ? cameras : aiBoxes;
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        setIsLoading(true);
+        setError(null);
+        if (selectedData === "camera") {
+          const camerasData = await fetchCameras();
+          setCameras(camerasData);
+        } else {
+          const aiData = await fetchAiBoxes();
+          setAiBoxes(aiData);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadData();
+  }, [selectedData]);
+
   const filterOptions = ["Tất cả", "Đang hoạt động", "Kích hoạt thất bại", "Lỗi xác thực"];
-
-
 
   const companies = [
     "Oryza Systems",
@@ -29,7 +54,6 @@ export default function CameraSystem() {
   ];
 
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>(companies);
-
 
   const tagStatuses = [
     "Lỗi xác thực",
@@ -76,7 +100,6 @@ export default function CameraSystem() {
     return <span className={statusColors[status] || "text-gray-500"}>{status}</span>;
   };
 
-
   const renderIcon = (dataType: string) => {
     if (dataType === "camera") {
       return <Cctv size={64} className="text-gray-400" />;
@@ -122,6 +145,14 @@ export default function CameraSystem() {
         : [...prev, company]
     );
   };
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
+  }
 
   return (
     <div className="container mx-auto p-2 sm:p-4 md:p-6">
@@ -374,11 +405,11 @@ export default function CameraSystem() {
                         </div>
                       </td>
                       <td className="hidden md:table-cell p-3 xl:p-4">
-                        {item.location}
+                        {item.address}
                       </td>
                       <td className="hidden lg:table-cell p-3 xl:p-4">
                         <div className="flex items-center gap-1 ">
-                          {item.timestamp}
+                          {item.coordinates}
                           <CopyIcon size={16} className="cursor-pointer text-gray-400 hover:text-gray-600" />
                         </div>
                       </td>
